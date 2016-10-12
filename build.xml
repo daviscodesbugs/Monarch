@@ -1,0 +1,41 @@
+<project name="Monarch" default="compile" basedir=".">
+
+    <!--==================== PROPERTIES ====================-->
+    <property name="main.src.dir" location="src"/>
+    <property name="build.dir" location="bin"/>
+    <property name="jar.dir" location="jar"/>
+    <!--==================== CLASS PATHS ====================-->
+    <path id="all-classpath">
+        <pathelement location="${build.dir}"/>
+    </path>
+    <!--==================== TARGETS ====================-->
+    <target name="init" description="prep to build">
+        <mkdir dir="${build.dir}"/>
+        <mkdir dir="${jar.dir}"/>
+    </target>
+    <target name="clean" description="delete build files and directories">
+        <delete dir="${build.dir}"/>
+        <delete dir="${jar.dir}"/>
+    </target>
+    <target name="compile" depends="init" description="compile the source code">
+        <javac srcdir="${main.src.dir}" classpathref="all-classpath" destdir="${build.dir}" debug="true"
+               includeantruntime="true"/>
+    </target>
+
+    <target name="jar" depends="compile">
+        <jar jarfile="${jar.dir}/Monarch.jar" basedir="${build.dir}">
+            <manifest>
+                <attribute name="Main-Class" value="Main"/>
+            </manifest>
+        </jar>
+    </target>
+
+    <target name="run" depends="jar" description="jar the code and run">
+        <java jar="${jar.dir}/Monarch.jar" fork="true" dir="${jar.dir}">
+            <assertions>
+                <enable/>
+            </assertions>
+        </java>
+    </target>
+
+</project>
